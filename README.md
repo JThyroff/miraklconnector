@@ -9,4 +9,4 @@ Prestashop module documentation:
 
 1. Install Mirakl sdk as described in Mirakl Faq and adjust the path to autoload.php.
 
-2. Generate the Mirakl Api Credentials and add them to the apikey.json.
+2. Generate the Mirakl Api Credentials. Copy template.apikey.json, rename it to apikey.json and add your credentials.
