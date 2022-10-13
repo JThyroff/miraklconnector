@@ -1,7 +1,7 @@
 # Private files
 # The following files contain your database credentials and other personal data.
 
-apikey.json
+*/apikey.json
 config/settings.*.php
 
 # Cache, temp and generated files
