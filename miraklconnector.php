@@ -25,10 +25,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-class miraklConnector extends Module{
+class miraklconnector extends Module{
     public function __construct($name = null, Context $context = null)
     {
-        $this->name = "miraklConnector";
+        $this->name = "miraklconnector";
         $this->tab = "front_office_features";
         $this->version = "0.0.1";
         $this->author = "Johannes Thyroff";
