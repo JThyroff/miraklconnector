@@ -1,0 +1,22 @@
+{
+  "name": "prestashop/miraklconnector",
+  "license": "AFL-3.0",
+  "authors": [
+    {
+      "name": "Johannes Thyroff",
+      "email": "johannes.thyroff@gmail.com"
+    },
+    {
+        "name": "Core Team"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\MiraklConnector\\": "src/"
+    },
+    "config": {
+      "prepend-autoloader": false
+    },
+    "type": "prestashop-module"
+  }
+}
