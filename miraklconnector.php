@@ -56,7 +56,7 @@ class miraklconnector extends Module{
         // See https://devdocs.prestashop.com/1.7/modules/concepts/controllers/admin-controllers/tabs/
         $tabNames = [];
         foreach (Language::getLanguages(true) as $lang) {
-            $tabNames[$lang['locale']] = $this->trans('Demo Controller Tabs', [], 'Modules.Democontrollertabs.Admin', $lang['locale']);
+            $tabNames[$lang['locale']] = $this->trans('Demo Controller Tabs', [], 'Modules.MiraklConnector.Admin', $lang['locale']);
         }
 
         $this->tabs = [[
@@ -114,7 +114,7 @@ class miraklconnector extends Module{
             $tab->name[$lang['id_lang']] = $this->trans('Manual Tab controller', [], 'Modules.MiraklConnector.Admin', $lang['locale']);
         }
         $tab->icon = 'build';
-        $tab->id_parent = (int) Tab::getIdFromClassName('IMPROVE');
+        $tab->id_parent = (int) Tab::getIdFromClassName('SELL');
         $tab->module = $this->name;
 
         return (bool) $tab->save();

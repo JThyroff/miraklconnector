@@ -3,4 +3,4 @@ ps_controller_mirakl_sell_manual_tab:
     path: /mirakl-sell-manual-tab
     methods: [GET]
     defaults:
-        _controller: 'PrestaShop\Module\MiraklConnector\src\Controller\Admin\MiraklSellManualTabController::indexAction'
+        _controller: 'PrestaShop\Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::indexAction'
