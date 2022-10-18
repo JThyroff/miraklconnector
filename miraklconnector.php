@@ -111,7 +111,7 @@ class miraklconnector extends Module{
         $tab->route_name = 'ps_controller_mirakl_sell_manual_tab';
         $tab->name = [];
         foreach (Language::getLanguages() as $lang) {
-            $tab->name[$lang['id_lang']] = $this->trans('Manual Tab controller', [], 'Modules.MiraklConnector.Admin', $lang['locale']);
+            $tab->name[$lang['id_lang']] = $this->trans('PC-Componentes', [], 'Modules.MiraklConnector.Admin', $lang['locale']);
         }
         $tab->icon = 'build';
         $tab->id_parent = (int) Tab::getIdFromClassName('SELL');
