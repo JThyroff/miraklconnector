@@ -27,8 +27,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\MiraklConnector\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MiraklSellManualTabController extends FrameworkBundleAdminController
@@ -38,10 +41,54 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', 'MiraklSellManualTab')")
      *
+     * @param Request $request
+     * @param OrderFilters $filters
+     *
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(Request $request, OrderFilters $filters): Response
     {
-        return $this->render('@Modules/miraklconnector/views/templates/admin/mirakl_sell_manual_tab.html.twig');
+        $orderKpiFactory = $this->get('prestashop.core.kpi_row.factory.orders');
+        $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
+
+        $changeOrderStatusesForm = $this->createForm(ChangeOrdersStatusType::class);
+
+        return $this->render('@Modules/miraklconnector/views/templates/admin/mirakl_sell_manual_tab.html.twig',
+            [
+                'orderGrid' => $this->presentGrid($orderGrid),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                'enableSidebar' => true,
+                'changeOrderStatusesForm' => $changeOrderStatusesForm->createView(),
+                'orderKpi' => $orderKpiFactory->build(),
+                'layoutHeaderToolbarBtn' => $this->getOrderToolbarButtons(),
+            ]
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private function getOrderToolbarButtons(): array
+    {
+        $toolbarButtons = [];
+
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
+        /*$toolbarButtons['add'] = [
+            'href' => $this->generateUrl('admin_orders_create'),
+            'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
+            'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
+        ];*/
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
+
+        return $toolbarButtons;
     }
 }
