@@ -1,0 +1,6 @@
+# @see https://devdocs.prestashop.com/1.7/modules/concepts/controllers/admin-controllers/#how-to-map-an-action-of-your-controller-to-a-uri
+ps_controller_mirakl_sell_manual_tab:
+    path: /mirakl-sell-manual-tab
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShop\Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::indexAction'
