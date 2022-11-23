@@ -7,12 +7,12 @@
       "email": "johannes.thyroff@gmail.com"
     },
     {
-        "name": "Core Team"
+      "name": "Core Team"
     }
   ],
   "autoload": {
     "psr-4": {
-      "PrestaShop\\Module\\MiraklConnector\\": "src/"
+      "Module\\MiraklConnector\\": "src/"
     },
     "config": {
       "prepend-autoloader": false

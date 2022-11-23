@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Controller\Admin;
+namespace Module\MiraklConnector\Controller\Admin;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;

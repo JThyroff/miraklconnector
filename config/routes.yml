@@ -3,13 +3,13 @@ ps_controller_mirakl_sell_manual_tab:
     path: /mirakl-sell-manual-tab
     methods: [GET]
     defaults:
-        _controller: 'PrestaShop\Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::indexAction'
+        _controller: 'Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::indexAction'
 
 mirakl_connector_index:
     path: /demo-grid
     methods: [GET]
     defaults:
-        _controller: 'PrestaShop\Module\MiraklConnector\Controller\Admin\IndexController::indexAction'
+        _controller: 'Module\MiraklConnector\Controller\Admin\IndexController::indexAction'
         _legacy_controller: 'AdminDemoGrid'
         _legacy_link: 'AdminDemoGrid'
 
@@ -17,6 +17,6 @@ mirakl_connector_search:
     path: /demo-grid
     methods: [POST]
     defaults:
-        _controller: 'PrestaShop\Module\MiraklConnector\Controller\Admin\IndexController::searchAction'
+        _controller: 'Module\MiraklConnector\Controller\Admin\IndexController::searchAction'
         _legacy_controller: 'AdminDemoGrid'
         _legacy_link: 'AdminDemoGrid:search'

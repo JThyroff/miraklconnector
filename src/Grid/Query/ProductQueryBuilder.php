@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Grid\Query;
+namespace Module\MiraklConnector\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;

@@ -20,10 +20,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Controller\Admin;
+namespace Module\MiraklConnector\Controller\Admin;
 
-use PrestaShop\Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
-use Prestashop\Module\MiraklConnector\Grid\Filters\ProductFilters;
+use Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use Module\MiraklConnector\Grid\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -1,11 +1,11 @@
 services:
   # Grid services
   mirakl_connector.grid.definition.factory.products:
-    class: 'PrestaShop\Module\Miraklconnector\Grid\Definition\Factory\ProductGridDefinitionFactory'
+    class: 'Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
 
   mirakl_connector.grid.query_builder.product:
-    class: 'PrestaShop\Module\Miraklconnector\Query\ProductQueryBuilder'
+    class: 'Module\MiraklConnector\Query\ProductQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:

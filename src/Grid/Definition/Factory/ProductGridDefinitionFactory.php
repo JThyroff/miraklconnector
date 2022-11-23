@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Grid\Definition\Factory;
+namespace Module\MiraklConnector\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;

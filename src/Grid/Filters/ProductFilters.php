@@ -20,9 +20,9 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Grid\Filters;
+namespace Module\MiraklConnector\Grid\Filters;
 
-use PrestaShop\Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 class ProductFilters extends Filters
