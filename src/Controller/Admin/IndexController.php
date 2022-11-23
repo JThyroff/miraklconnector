@@ -48,7 +48,7 @@ class IndexController extends FrameworkBundleAdminController
             '@Modules/miraklconnector/views/templates/admin/index.html.twig',
             [
                 'enableSidebar' => true,
-                'layoutTitle' => $this->trans('Product listing', 'Modules.Miraklconnector.Admin'),
+                'layoutTitle' => $this->trans('Product listing', 'Modules.MiraklConnector.Admin'),
                 'quoteGrid' => $this->presentGrid($quoteGrid),
             ]
         );
