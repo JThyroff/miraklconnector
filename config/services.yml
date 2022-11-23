@@ -5,7 +5,7 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
 
   mirakl_connector.grid.query_builder.product:
-    class: 'Module\MiraklConnector\Query\ProductQueryBuilder'
+    class: 'Module\MiraklConnector\Grid\Query\ProductQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
