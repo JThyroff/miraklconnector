@@ -202,12 +202,12 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addFilter(
                 'id_product',
                 'p.`id_product`',
-                SqlFilters::MIN_MAX
+                SqlFilters::WHERE_LIKE
             )
             ->addFilter(
                 'price_tax_excluded',
                 'ps.`price`',
-                SqlFilters::MIN_MAX
+                SqlFilters::WHERE_LIKE
             )
         ;
 
@@ -216,7 +216,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 ->addFilter(
                     'quantity',
                     'sa.`quantity`',
-                    SqlFilters::MIN_MAX
+                    SqlFilters::WHERE_LIKE
                 )
             ;
         }
