@@ -26,6 +26,9 @@ config/xml/*.xml
 themes/*/cache/
 modules/*/config*.xml
 
+# output of the zip build file
+miraklconnector.zip
+
 # Site content
 # The following folders contain product images, virtual products, CSV's, etc.
 
