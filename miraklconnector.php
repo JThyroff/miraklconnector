@@ -30,12 +30,12 @@ declare(strict_types=1);
 // Needed for install process
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PrestaShop\Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
+use Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
 
 class miraklconnector extends Module{
     public function __construct($name = null, Context $context = null)
     {
-        $this->name = "miraklconnector";
+        $this->name = "mirakl_connector";
         $this->tab = "administration";
 
         $this->version = "0.0.1";
@@ -56,7 +56,10 @@ class miraklconnector extends Module{
 
     public function getContent(){
         //this is the configuration page
-        return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
+        Tools::redirectAdmin(
+            $this->context->link->getAdminLink('AdminDemoGrid')
+        );
+        //return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
     }
 
     public function install()
