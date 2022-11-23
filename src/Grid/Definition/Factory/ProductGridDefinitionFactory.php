@@ -48,7 +48,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName()
     {
-        return $this->trans('Products', [], 'Modules.Miraklconnector.Admin');
+        return $this->trans('Products', [], 'Modules.MiraklConnector.Admin');
     }
 
     /**
@@ -65,14 +65,14 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('reference'))
-                    ->setName($this->trans('Reference', [], 'Modules.Miraklconnector.Admin'))
+                    ->setName($this->trans('Reference', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
                         'field' => 'reference',
                     ])
             )
             ->add(
                 (new DataColumn('active'))
-                    ->setName($this->trans('Active', [], 'Modules.Miraklconnector.Admin'))
+                    ->setName($this->trans('Active', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
                         'field' => 'active',
                     ])
@@ -104,7 +104,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Reference', [], 'Modules.Miraklconnector.Admin'),
+                            'placeholder' => $this->trans('Reference', [], 'Modules.MiraklConnector.Admin'),
                         ],
                     ])
                     ->setAssociatedColumn('reference')
@@ -114,7 +114,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Active', [], 'Modules.Miraklconnector.Admin'),
+                            'placeholder' => $this->trans('Active', [], 'Modules.MiraklConnector.Admin'),
                         ],
                     ])
                     ->setAssociatedColumn('active')
