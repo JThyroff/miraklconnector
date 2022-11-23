@@ -26,6 +26,8 @@ config/xml/*.xml
 themes/*/cache/
 modules/*/config*.xml
 
+/js/node_modules/*
+
 # output of the zip build file
 miraklconnector.zip
 
