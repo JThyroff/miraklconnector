@@ -25,18 +25,68 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\MiraklConnector\Controller\Admin;
+namespace Module\MiraklConnector\Controller\Admin;
 
+use Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
+use Module\MiraklConnector\Grid\Filters\ProductFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Order\ChangeOrdersStatusType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MiraklSellManualTabController extends FrameworkBundleAdminController
 {
+
     const TAB_CLASS_NAME = 'MiraklSellManualTab';
+
+
+    /**
+     * List quotes
+     *
+     * @param ProductFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(ProductFilters $filters)
+    {
+        $quoteGridFactory = $this->get('mirakl_connector.grid.factory.products');
+        $quoteGrid = $quoteGridFactory->getGrid($filters);
+
+        return $this->render(
+            '@Modules/miraklconnector/views/templates/admin/index.html.twig',
+            [
+                'enableSidebar' => true,
+                'layoutTitle' => $this->trans('Product listing', 'Modules.MiraklConnector.Admin'),
+                'quoteGrid' => $this->presentGrid($quoteGrid),
+            ]
+        );
+    }
+
+    /**
+     * Provides filters functionality.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request)
+    {
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('mirakl_connector.grid.definition.factory.products'),
+            $request,
+            ProductGridDefinitionFactory::GRID_ID,
+            'ps_controller_mirakl_sell_manual_tab_index'
+        );
+    }
+
+
 
     /**
      * @AdminSecurity("is_granted('read', 'MiraklSellManualTab')")
@@ -46,6 +96,7 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
      *
      * @return Response
      */
+    /*
     public function indexAction(Request $request, OrderFilters $filters): Response
     {
         $orderKpiFactory = $this->get('prestashop.core.kpi_row.factory.orders');
@@ -63,11 +114,12 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $this->getOrderToolbarButtons(),
             ]
         );
-    }
+    }*/
 
     /**
      * @return array
      */
+    /*
     private function getOrderToolbarButtons(): array
     {
         $toolbarButtons = [];
@@ -79,7 +131,7 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
             'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
             'disabled' => !$isSingleShopContext,
-        ];*/
+        ];*
 
         if (!$isSingleShopContext) {
             $toolbarButtons['add']['help'] = $this->trans(
@@ -90,5 +142,5 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
         }
 
         return $toolbarButtons;
-    }
+    }*/
 }

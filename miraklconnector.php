@@ -30,7 +30,7 @@ declare(strict_types=1);
 // Needed for install process
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PrestaShop\Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
+use Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
 
 class miraklconnector extends Module{
     public function __construct($name = null, Context $context = null)
@@ -96,7 +96,7 @@ class miraklconnector extends Module{
         $tab = new Tab($tabId);
         $tab->active = 1;
         $tab->class_name = $controllerClassName;
-        $tab->route_name = 'ps_controller_mirakl_sell_manual_tab';
+        $tab->route_name = 'ps_controller_mirakl_sell_manual_tab_index';
         $tab->name = [];
         foreach (Language::getLanguages() as $lang) {
             $tab->name[$lang['id_lang']] = $this->trans('PC-Componentes', [], 'Modules.MiraklConnector.Admin', $lang['locale']);
