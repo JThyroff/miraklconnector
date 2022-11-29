@@ -82,7 +82,7 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
             $this->get('mirakl_connector.grid.definition.factory.products'),
             $request,
             ProductGridDefinitionFactory::GRID_ID,
-            'mirakl_connector_index'
+            'ps_controller_mirakl_sell_manual_tab_index'
         );
     }
 

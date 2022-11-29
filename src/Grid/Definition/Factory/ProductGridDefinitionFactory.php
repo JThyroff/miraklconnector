@@ -126,7 +126,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'reset_route_params' => [
                             'filterId' => self::GRID_ID,
                         ],
-                        'redirect_route' => 'mirakl_connector_index',
+                        'redirect_route' => 'ps_controller_mirakl_sell_manual_tab_index',
                     ])
                     ->setAssociatedColumn('actions')
             )

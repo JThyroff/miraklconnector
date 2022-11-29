@@ -1,22 +1,17 @@
 # @see https://devdocs.prestashop.com/1.7/modules/concepts/controllers/admin-controllers/#how-to-map-an-action-of-your-controller-to-a-uri
-ps_controller_mirakl_sell_manual_tab:
+
+ps_controller_mirakl_sell_manual_tab_index:
     path: /mirakl-sell-manual-tab
     methods: [GET]
     defaults:
         _controller: 'Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::indexAction'
+        _legacy_controller: 'AdminMiraklSellManualTab'
+        _legacy_link: 'AdminMiraklSellManualTab'
 
-mirakl_connector_index:
-    path: /demo-grid
-    methods: [GET]
-    defaults:
-        _controller: 'Module\MiraklConnector\Controller\Admin\IndexController::indexAction'
-        _legacy_controller: 'AdminDemoGrid'
-        _legacy_link: 'AdminDemoGrid'
-
-mirakl_connector_search:
-    path: /demo-grid
+ps_controller_mirakl_sell_manual_tab_search:
+    path: /mirakl-sell-manual-tab
     methods: [POST]
     defaults:
-        _controller: 'Module\MiraklConnector\Controller\Admin\IndexController::searchAction'
-        _legacy_controller: 'AdminDemoGrid'
-        _legacy_link: 'AdminDemoGrid:search'
+        _controller: 'Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::searchAction'
+        _legacy_controller: 'AdminMiraklSellManualTab'
+        _legacy_link: 'AdminMiraklSellManualTab:search'
