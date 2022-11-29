@@ -2,8 +2,14 @@
 
 Prestashop module to integrate Mirakl orders in Prestashop using the Mirakl sdk.
 
+Repository:
+<https://github.com/JThyroff/miraklconnector/>
+
 Prestashop module documentation:
 <https://devdocs.prestashop-project.org/1.7/modules/>
+
+Prestashop module programming:
+<https://github.com/JThyroff/PrestashopDocs>
 
 ## Getting started
 
