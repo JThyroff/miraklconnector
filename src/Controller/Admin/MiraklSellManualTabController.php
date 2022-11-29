@@ -41,6 +41,9 @@ use Symfony\Component\HttpFoundation\Response;
 class MiraklSellManualTabController extends FrameworkBundleAdminController
 {
 
+    const TAB_CLASS_NAME = 'MiraklSellManualTab';
+
+
     /**
      * List quotes
      *
@@ -84,7 +87,6 @@ class MiraklSellManualTabController extends FrameworkBundleAdminController
     }
 
 
-    const TAB_CLASS_NAME = 'MiraklSellManualTab';
 
     /**
      * @AdminSecurity("is_granted('read', 'MiraklSellManualTab')")

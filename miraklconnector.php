@@ -56,10 +56,7 @@ class miraklconnector extends Module{
 
     public function getContent(){
         //this is the configuration page
-        Tools::redirectAdmin(
-            $this->context->link->getAdminLink('AdminDemoGrid')
-        );
-        //return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
+        return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
     }
 
     public function install()
