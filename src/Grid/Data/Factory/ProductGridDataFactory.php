@@ -3,6 +3,7 @@
 namespace Module\MiraklConnector\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
