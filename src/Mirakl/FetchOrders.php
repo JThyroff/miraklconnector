@@ -17,8 +17,7 @@ class FetchOrders
     public static function fetchOrders(){
 
         #region read api key
-        echo sprintf(dirname(__DIR__,2).'/apikey.json');
-        echo sprintf("\n");
+        echo sprintf("Loading API key from '".dirname(__DIR__,2).'/apikey.json'."' ...\n");
 
         $json = file_get_contents(dirname(__DIR__,2) . '/apikey.json');
         $json_data = json_decode($json, true);
@@ -27,11 +26,13 @@ class FetchOrders
         $apiKey = $json_data["apiKey"];
         #endregion
 
+        echo sprintf("Connecting to URL '".$apiUrl."' ...\n");
+
         #region create client and send orders request
         $client = new Client($apiUrl, $apiKey);
 
         $request = new GetHierarchiesRequest();
-        echo sprintf('%d hierarchy found', count($client->getHierarchies($request)));
+        echo sprintf('%d hierarchies found', count($client->getHierarchies($request)));
 
         echo sprintf("\n");
         $request = new GetOrdersRequest();
@@ -47,19 +48,25 @@ class FetchOrders
             //$array = json_decode(($val), true);
             //new ShopOrder($array);
 
-            $shopOrderLine = $order->getOrderLines()->first();
-            $productInfo = $shopOrderLine->getOffer()->getProduct();
-            $title = $productInfo->getTitle();
-            echo sprintf("ID: %d, ", $shopOrderLine->getId());
-            echo sprintf("Product sku: %d, ", $productInfo->getSku());
-            echo sprintf("Price: %f€, ", $shopOrderLine->getTotalPrice());
-            echo sprintf("Title: %s", $title);
+            //FetchOrders::printToConsole($order);
+            echo var_dump(GridPrepare::processJSON($order));
 
-            echo "\n";
             //uncomment to print whole content
             //echo $key." ".$title.":".$order."\n";
         }
         #endregion
+    }
+
+    public static function printToConsole(ShopOrder $shopOrder){
+        $shopOrderLine = $shopOrder->getOrderLines()->first();
+        $productInfo = $shopOrderLine->getOffer()->getProduct();
+        $title = $productInfo->getTitle();
+        echo sprintf("ID: %d, ", $shopOrderLine->getId());
+        echo sprintf("Product sku: %d, ", $productInfo->getSku());
+        echo sprintf("Price: %f€, ", $shopOrderLine->getTotalPrice());
+        echo sprintf("Title: %s", $title);
+
+        echo "\n";
     }
 }
 
