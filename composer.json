@@ -18,5 +18,14 @@
       "prepend-autoloader": false
     },
     "type": "prestashop-module"
+  },
+  "repositories": [
+    {
+      "type": "artifact",
+      "url": "var/zip/"
+    }
+  ],
+  "require": {
+    "mirakl/sdk-php-shop": "*"
   }
 }
