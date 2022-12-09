@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../vendor/autoload.php');
+require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
 use Mirakl\MMP\Shop\Client\ShopApiClient as Client;
 use Mirakl\MCI\Shop\Request\Hierarchy\GetHierarchiesRequest;
