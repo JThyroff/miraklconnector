@@ -41,19 +41,7 @@ class FetchOrders
         echo sprintf("\n");
         #endregion
 
-        #region iterate orders and print info
-        $orderIterator = $client->getOrders($request)->getIterator();
-        foreach ($orderIterator as $key=>$order){
-
-            //$array = json_decode(($val), true);
-            //new ShopOrder($array);
-
-            //FetchOrders::printToConsole($order);
-            echo var_dump(GridPrepare::processJSON($order));
-
-            //uncomment to print whole content
-            //echo $key." ".$title.":".$order."\n";
-        }
+        var_dump(GridPrepare::processJSON(...$client->getOrders($request)));
         #endregion
     }
 
