@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Module\MiraklConnector\Mirakl;
 
-require_once(dirname(__DIR__,2) . '/vendor/autoload.php');
+require_once(dirname(__DIR__, 2) . '/vendor/autoload.php');
 
 use Mirakl\MMP\Shop\Client\ShopApiClient as Client;
 use Mirakl\MCI\Shop\Request\Hierarchy\GetHierarchiesRequest;
@@ -14,19 +14,19 @@ use Mirakl\MMP\Shop\Domain\Order\ShopOrder;
 
 class FetchOrders
 {
-    public static function fetchOrders(){
-
+    public static function fetchOrders()
+    {
         #region read api key
-        echo sprintf("Loading API key from '".dirname(__DIR__,2).'/apikey.json'."' ...\n");
+        echo sprintf("Loading API key from '" . dirname(__DIR__, 2) . '/apikey.json' . "' ...\n");
 
-        $json = file_get_contents(dirname(__DIR__,2) . '/apikey.json');
+        $json = file_get_contents(dirname(__DIR__, 2) . '/apikey.json');
         $json_data = json_decode($json, true);
 
         $apiUrl = $json_data["apiUrl"];
         $apiKey = $json_data["apiKey"];
         #endregion
 
-        echo sprintf("Connecting to URL '".$apiUrl."' ...\n");
+        echo sprintf("Connecting to URL '" . $apiUrl . "' ...\n");
 
         #region create client and send orders request
         $client = new Client($apiUrl, $apiKey);
@@ -41,11 +41,14 @@ class FetchOrders
         echo sprintf("\n");
         #endregion
 
-        var_dump(GridPrepare::processJSON(...$client->getOrders($request)));
+        $processJSON = GridPrepare::processJSON(...$client->getOrders($request));
+        var_dump($processJSON);
         #endregion
+        return $processJSON;
     }
 
-    public static function printToConsole(ShopOrder $shopOrder){
+    public static function printToConsole(ShopOrder $shopOrder)
+    {
         $shopOrderLine = $shopOrder->getOrderLines()->first();
         $productInfo = $shopOrderLine->getOffer()->getProduct();
         $title = $productInfo->getTitle();

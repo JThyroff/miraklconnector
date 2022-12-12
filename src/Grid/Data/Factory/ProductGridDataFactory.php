@@ -3,6 +3,7 @@
 namespace Module\MiraklConnector\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use Module\MiraklConnector\Mirakl\FetchOrders;
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
@@ -69,6 +70,11 @@ class ProductGridDataFactory implements GridDataFactoryInterface
 
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
+
+        #region Injected code
+        $records = FetchOrders::fetchOrders();
+        $recordsTotal = count($records);
+        #endregion
 
         $records = new RecordCollection($records);
 
