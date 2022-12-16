@@ -42,7 +42,7 @@ class FetchOrders
         #endregion
 
         $processJSON = GridPrepare::processJSON(...$client->getOrders($request));
-        var_dump($processJSON);
+        //var_dump($processJSON);
         #endregion
         return $processJSON;
     }

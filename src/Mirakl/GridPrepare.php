@@ -23,7 +23,7 @@ class GridPrepare
 
             $array[] = [
                 "id_product" => $id,
-                "reference" => $sku,
+                "reference" => $title,
                 "price_tax_excluded" => $price,
                 "active" => $sku,
                 "name" => $title,
