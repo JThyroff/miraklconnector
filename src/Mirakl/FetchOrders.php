@@ -17,8 +17,6 @@ class FetchOrders
     public static function fetchOrders()
     {
         #region read api key
-        echo sprintf("Loading API key from '" . dirname(__DIR__, 2) . '/apikey.json' . "' ...\n");
-
         $json = file_get_contents(dirname(__DIR__, 2) . '/apikey.json');
         $json_data = json_decode($json, true);
 
@@ -26,24 +24,11 @@ class FetchOrders
         $apiKey = $json_data["apiKey"];
         #endregion
 
-        echo sprintf("Connecting to URL '" . $apiUrl . "' ...\n");
-
-        #region create client and send orders request
         $client = new Client($apiUrl, $apiKey);
-
-        $request = new GetHierarchiesRequest();
-        echo sprintf('%d hierarchies found', count($client->getHierarchies($request)));
-
-        echo sprintf("\n");
         $request = new GetOrdersRequest();
-        //echo sprintf($request);
-        echo sprintf('%d orders found', $client->getOrders($request)->count());
-        echo sprintf("\n");
-        #endregion
 
         $processJSON = GridPrepare::processJSON(...$client->getOrders($request));
-        //var_dump($processJSON);
-        #endregion
+
         return $processJSON;
     }
 
