@@ -14,7 +14,10 @@ use Mirakl\MMP\Shop\Domain\Order\ShopOrder;
 
 class FetchOrders
 {
-    public static function fetchOrders()
+    /**
+     * @return array
+     */
+    public static function getOrdersRequest(): array
     {
         #region read api key
         $json = file_get_contents(dirname(__DIR__, 2) . '/apikey.json');
@@ -26,6 +29,12 @@ class FetchOrders
 
         $client = new Client($apiUrl, $apiKey);
         $request = new GetOrdersRequest();
+        return array($client, $request);
+    }
+
+    public static function fetchOrders()
+    {
+        list($client, $request) = self::getOrdersRequest();
 
         $processJSON = GridPrepare::processJSON(...$client->getOrders($request));
 
@@ -46,4 +55,16 @@ class FetchOrders
     }
 }
 
-FetchOrders::fetchOrders();
+#region debug script code
+if (false){
+    FetchOrders::fetchOrders();
+    list($client, $request) = FetchOrders::getOrdersRequest();
+    $response = $client->getOrders($request);
+    //var_dump($response[0]);
+    $invoiceFields = GridPrepare::extractInvoiceFields(...$response);
+    foreach ($invoiceFields as $order) {
+        var_dump($order);
+        //FetchOrders::printToConsole($order);
+    }
+}
+#endregion
