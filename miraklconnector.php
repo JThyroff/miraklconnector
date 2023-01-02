@@ -42,7 +42,7 @@ class miraklconnector extends Module{
         $this->author = "Johannes Thyroff";
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            "min" => "1.5",
+            "min" => "8",
             "max" => _PS_VERSION_
         ];
         $this->bootstrap = true;
