@@ -37,7 +37,7 @@ class GridPrepare
         return $array;
     }
 
-    public static function extractInvoiceFields(ShopOrder ...$shopOrders)
+    public static function extractInvoiceFields(ShopOrder ...$shopOrders): array
     {
         $array = array();
         foreach ($shopOrders as $order) {
