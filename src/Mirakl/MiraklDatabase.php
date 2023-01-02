@@ -65,11 +65,23 @@ class MiraklDatabase
         return $conn;
     }
 
-    public static function insertOrder(){
-        
+    public static function insertOrder(mysqli $conn, array $order){
+        #TODO rework with sql injection safe binding
+
+        #"INSERT INTO `BillingAddress` (`ID`, `city`, `civility`, `country`, `firstname`, `lastname`, `phone`, `state`, `street`, `zip_code`) VALUES (NULL, 'ARROYOMOLINOS DE LEÓN', '', 'ES', 'Reyes Carmen', 'Vázquez Carballar', '618042506', 'Huelva', 'Calle Juan Ramón Jiménez, 45', '21280');";
+        $sql = "INSERT INTO `BillingAddress` (`ID`, `city`, `civility`, `country`, `firstname`, `lastname`, `phone`, `state`, `street`, `zip_code`) 
+            VALUES (NULL, ".$order['city'].",".$order['civility'].",".$order['country'.",".$order['firstname'].",".$order['lastname'].",".$order['phone'].",".$order['state'].",".$order['street'].",".$order['zip_code']].");";
+
+        try {
+            if ($conn->query($sql)) {
+                echo("BillingAddress : Insertion successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
+        }
     }
 
-    public static function createTables($conn): void
+    public static function createTables(mysqli $conn): void
     {
         echo "Creating tables ...\n";
         $sql = "CREATE TABLE `PC_CompOrders`.`BillingAddress` (`ID` INT NOT NULL , `city` VARCHAR(255) NOT NULL , `civility` VARCHAR(255) NOT NULL , `country` VARCHAR(32) NOT NULL , `firstname` VARCHAR(255) NOT NULL , `lastname` VARCHAR(255) NOT NULL , `phone` VARCHAR(32) NOT NULL , `state` VARCHAR(255) NOT NULL , `street` VARCHAR(255) NOT NULL , `zip_code` VARCHAR(16) NOT NULL ) ENGINE = InnoDB;";
@@ -122,3 +134,14 @@ class MiraklDatabase
 
 $mysqli = MiraklDatabase::getConnection();
 MiraklDatabase::createTables($mysqli);
+
+list($client, $request) = FetchOrders::getOrdersRequest();
+$response = $client->getOrders($request);
+//var_dump($response[0]);
+$invoiceFields = GridPrepare::extractInvoiceFields(...$response);
+foreach ($invoiceFields as $order) {
+    var_dump($order);
+    MiraklDatabase::insertOrder($mysqli, $order);
+    break;
+}
+
