@@ -2,7 +2,9 @@
 
 namespace Module\MiraklConnector\Mirakl;
 
+use Doctrine\DBAL\Driver\Exception;
 use mysqli;
+use mysqli_sql_exception;
 
 require_once(dirname(__DIR__, 2) . '/vendor/autoload.php');
 
@@ -63,32 +65,58 @@ class MiraklDatabase
         return $conn;
     }
 
+    public static function insertOrder(){
+        
+    }
+
     public static function createTables($conn): void
     {
+        echo "Creating tables ...\n";
         $sql = "CREATE TABLE `PC_CompOrders`.`BillingAddress` (`ID` INT NOT NULL , `city` VARCHAR(255) NOT NULL , `civility` VARCHAR(255) NOT NULL , `country` VARCHAR(32) NOT NULL , `firstname` VARCHAR(255) NOT NULL , `lastname` VARCHAR(255) NOT NULL , `phone` VARCHAR(32) NOT NULL , `state` VARCHAR(255) NOT NULL , `street` VARCHAR(255) NOT NULL , `zip_code` VARCHAR(16) NOT NULL ) ENGINE = InnoDB;";
-        if ($conn->query($sql)) {
-            echo("BillingAddress : Table created successfully.\n");
+        try {
+            if ($conn->query($sql)) {
+                echo("BillingAddress : Table created successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
         }
 
         $sql = "CREATE TABLE `PC_CompOrders`.`Orders` (`date` DATETIME NOT NULL , `billingAddress` INT NOT NULL , `title` VARCHAR(255) NOT NULL , `sku` INT NOT NULL , `quantity` INT NOT NULL , `basePricePerUnit` FLOAT NOT NULL , `basePrice` FLOAT NOT NULL , `totalBasePrice` FLOAT NOT NULL , `taxes` FLOAT NOT NULL , `commissionTaxRate` FLOAT NOT NULL , `shippingPrice` FLOAT NOT NULL , `shippingTaxes` FLOAT NOT NULL , `totalPrice` FLOAT NOT NULL ) ENGINE = InnoDB;";
-        if ($conn->query($sql)) {
-            echo("Orders : Table created successfully.\n");
+        try {
+            if ($conn->query($sql)) {
+                echo("Orders : Table created successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
         }
 
         $sql = "ALTER TABLE `BillingAddress` ADD PRIMARY KEY(`ID`);";
-        if ($conn->query($sql)) {
-            echo("BillingAddress : Set ID as primary key successfully.\n");
+        try {
+            if ($conn->query($sql)) {
+                echo("BillingAddress : Set ID as primary key successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
         }
 
         $sql = "ALTER TABLE `BillingAddress` CHANGE `ID` `ID` INT(11) NOT NULL AUTO_INCREMENT;";
-        if ($conn->query($sql)) {
-            echo("BillingAddress : Set ID to auto increment successfully.\n");
+        try {
+            if ($conn->query($sql)) {
+                echo("BillingAddress : Set ID to auto increment successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
         }
 
         $sql = "ALTER TABLE `Orders` ADD PRIMARY KEY(`date`, `billingAddress`, `title`, `sku`, `quantity`);";
-        if ($conn->query($sql)) {
-            echo("Orders : Set primary key successfully.\n");
+        try {
+            if ($conn->query($sql)) {
+                echo("Orders : Set primary key successfully.\n");
+            }
+        }catch (mysqli_sql_exception $e){
+            echo $e->getMessage()."\n";
         }
+        echo "Tables created.\n";
     }
 }
 
