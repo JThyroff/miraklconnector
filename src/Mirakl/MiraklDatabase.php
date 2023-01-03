@@ -6,6 +6,8 @@ use Doctrine\DBAL\Driver\Exception;
 use mysqli;
 use mysqli_sql_exception;
 
+use Mirakl\MMP\Common\Domain\Order\CustomerBillingAddress;
+
 require_once(dirname(__DIR__, 2) . '/vendor/autoload.php');
 
 class MiraklDatabase
@@ -53,6 +55,7 @@ class MiraklDatabase
         $password = "mycustompassword";
         $dbName = "PC_CompOrders";
 
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $conn = new mysqli($serverName, $userName, $password, $dbName);
 
         echo("Connecting to " . $dbName . " on " . $serverName . " ...\n");
@@ -66,14 +69,27 @@ class MiraklDatabase
     }
 
     public static function insertOrder(mysqli $conn, array $order){
-        #TODO rework with sql injection safe binding
+        $billingAddr = $order['billingAddress'];
 
-        #"INSERT INTO `BillingAddress` (`ID`, `city`, `civility`, `country`, `firstname`, `lastname`, `phone`, `state`, `street`, `zip_code`) VALUES (NULL, 'ARROYOMOLINOS DE LEÓN', '', 'ES', 'Reyes Carmen', 'Vázquez Carballar', '618042506', 'Huelva', 'Calle Juan Ramón Jiménez, 45', '21280');";
-        $sql = "INSERT INTO `BillingAddress` (`ID`, `city`, `civility`, `country`, `firstname`, `lastname`, `phone`, `state`, `street`, `zip_code`) 
-            VALUES (NULL, ".$order['city'].",".$order['civility'].",".$order['country'.",".$order['firstname'].",".$order['lastname'].",".$order['phone'].",".$order['state'].",".$order['street'].",".$order['zip_code']].");";
+        $stmt = $conn->prepare("INSERT INTO `BillingAddress` (`ID`, `city`, `civility`, `country`, `firstname`, `lastname`, `phone`, `state`, `street`, `zip_code`) 
+            VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+
+        $city = $billingAddr->getCity();
+        $civility = $billingAddr->getCivility();
+        $country = $billingAddr->getCountry();
+        $firstname = $billingAddr->getFirstname();
+        $lastname = $billingAddr->getLastname();
+        $phone = $billingAddr->getPhone();
+        $state = $billingAddr->getState();
+        $street1 = $billingAddr->getStreet1();
+        $zipCode = $billingAddr->getZipCode();
+        
+        $stmt->bind_param('sssssssss',
+            $city, $civility, $country, $firstname, $lastname, $phone, $state, $street1, $zipCode
+        );
 
         try {
-            if ($conn->query($sql)) {
+            if ($stmt->execute()) {
                 echo("BillingAddress : Insertion successfully.\n");
             }
         }catch (mysqli_sql_exception $e){
