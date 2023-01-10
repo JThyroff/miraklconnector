@@ -3,6 +3,7 @@
 namespace Module\MiraklConnector\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use Module\MiraklConnector\Grid\Filters\ProductFilters;
 use Module\MiraklConnector\Mirakl\FetchOrders;
 use PDO;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\GridDataFactoryInterface;
@@ -10,6 +11,7 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -59,6 +61,8 @@ class ProductGridDataFactory implements GridDataFactoryInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
+        //$searchCriteria = new SearchCriteria(ProductFilters::getDefaults());
+
         $searchQueryBuilder = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
@@ -71,10 +75,12 @@ class ProductGridDataFactory implements GridDataFactoryInterface
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
+        /*
         #region Injected code
         $records = FetchOrders::fetchOrders();
         $recordsTotal = count($records);
         #endregion
+        */
 
         $records = new RecordCollection($records);
 

@@ -99,17 +99,12 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('p.`id_product`, p.`reference`')
-            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`active`')
-            ->addSelect('pl.`name`, pl.`link_rewrite`')
-            ->addSelect('cl.`name` AS `category`')
-            ->addSelect('img_shop.`id_image`')
-            ->addSelect('p.`id_tax_rules_group`')
-        ;
-
-        if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
-            $qb->addSelect('sa.`quantity`');
-        }
+            ->select('o.`date`, o.title')
+            ->addSelect('o.`billingAddress`, o.`sku`')
+            ->addSelect('o.`quantity`, o.`basePricePerUnit`')
+            ->addSelect('o.`basePrice`')
+            ->addSelect('o.`totalBasePrice`')
+            ->addSelect('o.`taxes`');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -125,7 +120,8 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(p.`id_product`)');
+        $qb->select('COUNT(o.`date`)');
+        #$qb->select('COUNT(p.`id_product`)');
 
         return $qb;
     }
@@ -141,85 +137,23 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'product', 'p')
+            ->from($this->dbPrefix . 'Orders', 'o')
             ->innerJoin(
-                'p',
-                $this->dbPrefix . 'product_shop',
-                'ps',
-                'ps.`id_product` = p.`id_product` AND ps.`id_shop` = :id_shop'
+                'o',
+                $this->dbPrefix . 'BillingAddress',
+                'ba',
+                'o.billingAddress = ba.ID'
             )
-            ->leftJoin(
-                'p',
-                $this->dbPrefix . 'product_lang',
-                'pl',
-                'pl.`id_product` = p.`id_product` AND pl.`id_lang` = :id_lang AND pl.`id_shop` = :id_shop'
-            )
-            ->leftJoin(
-                'ps',
-                $this->dbPrefix . 'category_lang',
-                'cl',
-                'cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :id_lang AND cl.`id_shop` = :id_shop'
-            )
-            ->leftJoin(
-                'ps',
-                $this->dbPrefix . 'image_shop',
-                'img_shop',
-                'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
-            )
-            ->andWhere('p.`state`=1')
         ;
-
-        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
-
-        if ($isStockManagementEnabled) {
-            $stockOnCondition =
-                'sa.`id_product` = p.`id_product`
-                    AND sa.`id_product_attribute` = 0
-                ';
-
-            if ($this->isStockSharingBetweenShopGroupEnabled) {
-                $stockOnCondition .= '
-                     AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :id_shop_group
-                ';
-            } else {
-                $stockOnCondition .= '
-                     AND sa.`id_shop` = :id_shop AND sa.`id_shop_group` = 0
-                ';
-            }
-
-            $qb->leftJoin(
-                'p',
-                $this->dbPrefix . 'stock_available',
-                'sa',
-                $stockOnCondition
-            );
-
-            $qb->setParameter('id_shop_group', $this->contextShopGroupId);
-        }
 
         $sqlFilters = new SqlFilters();
         $sqlFilters
             ->addFilter(
-                'id_product',
-                'p.`id_product`',
-                SqlFilters::WHERE_LIKE
-            )
-            ->addFilter(
-                'price_tax_excluded',
-                'ps.`price`',
+                'base_price',
+                'o.`basePrice`',
                 SqlFilters::WHERE_LIKE
             )
         ;
-
-        if ($isStockManagementEnabled) {
-            $sqlFilters
-                ->addFilter(
-                    'quantity',
-                    'sa.`quantity`',
-                    SqlFilters::WHERE_LIKE
-                )
-            ;
-        }
 
         $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
 
@@ -227,30 +161,23 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb->setParameter('id_lang', $this->contextLanguageId);
 
         foreach ($filterValues as $filterName => $filter) {
-            if ('active' === $filterName) {
-                $qb->andWhere('ps.`active` = :active');
-                $qb->setParameter('active', $filter);
+            if ('quantity' === $filterName) {
+                $qb->andWhere('o.`quantity` = :quantity');
+                $qb->setParameter('quantity', $filter);
 
                 continue;
             }
 
-            if ('name' === $filterName) {
-                $qb->andWhere('pl.`name` LIKE :name');
-                $qb->setParameter('name', '%' . $filter . '%');
+            if ('lastname' === $filterName) {
+                $qb->andWhere('ba.`lastname` LIKE :name');
+                $qb->setParameter('lastname', '%' . $filter . '%');
 
                 continue;
             }
 
-            if ('reference' === $filterName) {
-                $qb->andWhere('p.`reference` LIKE :reference');
-                $qb->setParameter('reference', '%' . $filter . '%');
-
-                continue;
-            }
-
-            if ('category' === $filterName) {
-                $qb->andWhere('cl.`name` LIKE :category');
-                $qb->setParameter('category', '%' . $filter . '%');
+            if ('title' === $filterName) {
+                $qb->andWhere('o.`title` LIKE :title');
+                $qb->setParameter('title', '%' . $filter . '%');
 
                 continue;
             }

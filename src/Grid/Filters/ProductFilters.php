@@ -37,7 +37,7 @@ class ProductFilters extends Filters
         return [
             'limit' => 10,
             'offset' => 0,
-            'orderBy' => 'id_product',
+            'orderBy' => 'date',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

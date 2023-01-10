@@ -58,23 +58,23 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new ColumnCollection())
             ->add(
-                (new DataColumn('id_product'))
+                (new DataColumn('date'))
                     ->setOptions([
-                        'field' => 'id_product',
+                        'field' => 'date',
                     ])
             )
             ->add(
-                (new DataColumn('reference'))
+                (new DataColumn('title'))
                     ->setName($this->trans('Reference', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
-                        'field' => 'reference',
+                        'field' => 'title',
                     ])
             )
             ->add(
-                (new DataColumn('active'))
-                    ->setName($this->trans('Active', [], 'Modules.MiraklConnector.Admin'))
+                (new DataColumn('quantity'))
+                    ->setName($this->trans('Quantity', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
-                        'field' => 'active',
+                        'field' => 'quantity',
                     ])
             )
             ->add(
@@ -90,34 +90,34 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new FilterCollection())
             ->add(
-                (new Filter('id_product', TextType::class))
+                (new Filter('date', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('ID', [], 'Admin.Global'),
+                            'placeholder' => $this->trans('Date', [], 'Admin.Global'),
                         ],
                     ])
-                    ->setAssociatedColumn('id_product')
+                    ->setAssociatedColumn('date')
             )
             ->add(
-                (new Filter('reference', TextType::class))
+                (new Filter('title', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Reference', [], 'Modules.MiraklConnector.Admin'),
+                            'placeholder' => $this->trans('Title', [], 'Modules.MiraklConnector.Admin'),
                         ],
                     ])
-                    ->setAssociatedColumn('reference')
+                    ->setAssociatedColumn('title')
             )
             ->add(
-                (new Filter('active', TextType::class))
+                (new Filter('quantity', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Active', [], 'Modules.MiraklConnector.Admin'),
+                            'placeholder' => $this->trans('Quantity', [], 'Modules.MiraklConnector.Admin'),
                         ],
                     ])
-                    ->setAssociatedColumn('active')
+                    ->setAssociatedColumn('quantity')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
