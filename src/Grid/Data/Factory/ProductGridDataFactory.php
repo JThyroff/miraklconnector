@@ -61,8 +61,6 @@ class ProductGridDataFactory implements GridDataFactoryInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        //$searchCriteria = new SearchCriteria(ProductFilters::getDefaults());
-
         $searchQueryBuilder = $this->gridQueryBuilder->getSearchQueryBuilder($searchCriteria);
         $countQueryBuilder = $this->gridQueryBuilder->getCountQueryBuilder($searchCriteria);
 
@@ -74,13 +72,6 @@ class ProductGridDataFactory implements GridDataFactoryInterface
 
         $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
-
-        /*
-        #region Injected code
-        $records = FetchOrders::fetchOrders();
-        $recordsTotal = count($records);
-        #endregion
-        */
 
         $records = new RecordCollection($records);
 
