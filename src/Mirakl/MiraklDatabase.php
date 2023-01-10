@@ -101,7 +101,7 @@ class MiraklDatabase
         $shippingTaxAmount = $order['shippingTaxes']->first()->getAmount();
         $totalPrice = $order['totalPrice'];
 
-        $stmt->bind_param('sisiidddddddd',
+        $stmt->bind_param('sissidddddddd',
             $date, $billingAddress, $title, $sku, $quantity, $basePricePerUnit, $basePrice, $totalBasePrice
             , $taxAmount, $commissionTaxRate, $shippingPrice, $shippingTaxAmount, $totalPrice
         );
@@ -151,7 +151,7 @@ class MiraklDatabase
 
         $sql = "CREATE TABLE `PC_CompOrders`.`Orders` (
             `date` DATETIME NOT NULL , `billingAddress` INT NOT NULL , `title` VARCHAR(255) NOT NULL 
-            , `sku` INT NOT NULL , `quantity` INT NOT NULL , `basePricePerUnit` FLOAT NOT NULL 
+            , `sku` VARCHAR(12) NOT NULL , `quantity` INT NOT NULL , `basePricePerUnit` FLOAT NOT NULL 
             , `basePrice` FLOAT NOT NULL , `totalBasePrice` FLOAT NOT NULL , `taxes` FLOAT NOT NULL 
             , `commissionTaxRate` FLOAT NOT NULL , `shippingPrice` FLOAT NOT NULL , `shippingTaxes` FLOAT NOT NULL 
             , `totalPrice` FLOAT NOT NULL
@@ -184,11 +184,9 @@ MiraklDatabase::createTables($mysqli);
 
 list($client, $request) = FetchOrders::getOrdersRequest();
 $response = $client->getOrders($request);
-//var_dump($response[0]);
+var_dump($response[0]);
 $invoiceFields = GridPrepare::extractInvoiceFields(...$response);
 foreach ($invoiceFields as $order) {
-    var_dump($order);
     var_dump(MiraklDatabase::insertOrder($mysqli, $order));
-    break;
 }
 

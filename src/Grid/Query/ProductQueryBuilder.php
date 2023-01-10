@@ -104,7 +104,8 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('o.`quantity`, o.`basePricePerUnit`')
             ->addSelect('o.`basePrice`')
             ->addSelect('o.`totalBasePrice`')
-            ->addSelect('o.`taxes`');
+            ->addSelect('o.`taxes`')
+            ->addSelect('o.`totalPrice`');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -146,6 +147,7 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
+        /*
         $sqlFilters = new SqlFilters();
         $sqlFilters
             ->addFilter(
@@ -155,19 +157,12 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             )
         ;
 
-        $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
+        $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);*/
 
         $qb->setParameter('id_shop', $this->contextShopId);
         $qb->setParameter('id_lang', $this->contextLanguageId);
 
         foreach ($filterValues as $filterName => $filter) {
-            if ('quantity' === $filterName) {
-                $qb->andWhere('o.`quantity` = :quantity');
-                $qb->setParameter('quantity', $filter);
-
-                continue;
-            }
-
             if ('lastname' === $filterName) {
                 $qb->andWhere('ba.`lastname` LIKE :name');
                 $qb->setParameter('lastname', '%' . $filter . '%');
@@ -175,9 +170,44 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
+            if ('date' === $filterName) {
+                $qb->andWhere('o.`date` LIKE :date');
+                $qb->setParameter('date', '%'.$filter.'%');
+
+                continue;
+            }
+
+            if ('billingAddress' === $filterName) {
+                $qb->andWhere('o.`billingAddress` = :billingAddress');
+                $qb->setParameter('billingAddress', $filter);
+
+                continue;
+            }
+
             if ('title' === $filterName) {
                 $qb->andWhere('o.`title` LIKE :title');
                 $qb->setParameter('title', '%' . $filter . '%');
+
+                continue;
+            }
+
+            if ('sku' === $filterName) {
+                $qb->andWhere('o.`sku` LIKE :sku');
+                $qb->setParameter('sku', '%'.$filter.'%');
+
+                continue;
+            }
+
+            if ('quantity' === $filterName) {
+                $qb->andWhere('o.`quantity` = :quantity');
+                $qb->setParameter('quantity', $filter);
+
+                continue;
+            }
+
+            if ('totalPrice' === $filterName) {
+                $qb->andWhere('ABS (o.totalPrice - :totalPrice) < 2');
+                $qb->setParameter('totalPrice', $filter);
 
                 continue;
             }

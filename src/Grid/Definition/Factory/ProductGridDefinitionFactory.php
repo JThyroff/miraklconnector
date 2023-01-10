@@ -59,15 +59,30 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new ColumnCollection())
             ->add(
                 (new DataColumn('date'))
+                    ->setName($this->trans('Date', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
                         'field' => 'date',
                     ])
             )
             ->add(
+                (new DataColumn('billingAddress'))
+                    ->setName($this->trans('Billing Address', [], 'Modules.MiraklConnector.Admin'))
+                    ->setOptions([
+                        'field' => 'billingAddress',
+                    ])
+            )
+            ->add(
                 (new DataColumn('title'))
-                    ->setName($this->trans('Reference', [], 'Modules.MiraklConnector.Admin'))
+                    ->setName($this->trans('Title', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
                         'field' => 'title',
+                    ])
+            )
+            ->add(
+                (new DataColumn('sku'))
+                    ->setName($this->trans('SKU', [], 'Modules.MiraklConnector.Admin'))
+                    ->setOptions([
+                        'field' => 'sku',
                     ])
             )
             ->add(
@@ -75,6 +90,13 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Quantity', [], 'Modules.MiraklConnector.Admin'))
                     ->setOptions([
                         'field' => 'quantity',
+                    ])
+            )
+            ->add(
+                (new DataColumn('totalPrice'))
+                    ->setName($this->trans('Total Price (€)', [], 'Modules.MiraklConnector.Admin'))
+                    ->setOptions([
+                        'field' => 'totalPrice',
                     ])
             )
             ->add(
@@ -94,10 +116,20 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
-                            'placeholder' => $this->trans('Date', [], 'Admin.Global'),
+                            'placeholder' => $this->trans('Date', [], 'Modules.MiraklConnector.Admin'),
                         ],
                     ])
                     ->setAssociatedColumn('date')
+            )
+            ->add(
+                (new Filter('billingAddress', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Billing Address', [], 'Modules.MiraklConnector.Admin'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('billingAddress')
             )
             ->add(
                 (new Filter('title', TextType::class))
@@ -110,6 +142,16 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('title')
             )
             ->add(
+                (new Filter('sku', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('SKU', [], 'Modules.MiraklConnector.Admin'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('sku')
+            )
+            ->add(
                 (new Filter('quantity', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
@@ -118,6 +160,16 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                     ])
                     ->setAssociatedColumn('quantity')
+            )
+            ->add(
+                (new Filter('totalPrice', TextType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => $this->trans('Total Price', [], 'Modules.MiraklConnector.Admin'),
+                        ],
+                    ])
+                    ->setAssociatedColumn('totalPrice')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
