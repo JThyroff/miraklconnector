@@ -38,12 +38,12 @@ class miraklconnector extends Module{
         $this->name = "miraklconnector";
         $this->tab = "administration";
 
-        $this->version = "0.0.1";
+        $this->version = "0.1.0";
         $this->author = "Johannes Thyroff";
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            "min" => "8",
-            "max" => _PS_VERSION_
+            "min" => "8.0.0",
+            "max" => "8.0.0"
         ];
         $this->bootstrap = true;
         parent::__construct();
