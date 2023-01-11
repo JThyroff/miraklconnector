@@ -6,10 +6,11 @@ services:
 
   mirakl_connector.grid.query_builder.product:
     class: 'Module\MiraklConnector\Grid\Query\ProductQueryBuilder'
-    parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@doctrine.dbal.custom_connection'  # Correct the order of the arguments
+      - ''
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'  # Correct the service name
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id_shop_group"
@@ -17,8 +18,23 @@ services:
       - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
 
+
+
+  doctrine.dbal.custom_connection:
+    class: Doctrine\DBAL\Connection
+    public: true
+    factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
+    arguments:
+      -
+        dbname: 'PC_CompOrders'
+        user: 'root'
+        password: 'mycustompassword'
+        host: '172.18.0.2'
+        driver: 'pdo_mysql'
+
+
   mirakl_connector.grid.data_provider.products:
-    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    class: 'Module\MiraklConnector\Grid\Data\Factory\ProductGridDataFactory'
     arguments:
       - '@mirakl_connector.grid.query_builder.product'
       - '@prestashop.core.hook.dispatcher'
