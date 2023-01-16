@@ -128,26 +128,16 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add(
-                                (new LinkRowAction('edit'))
-                                    ->setName('Edit')
-                                    ->setIcon('edit')
+                                (new LinkRowAction('invoice'))
+                                    ->setName('Invoice')
+                                    ->setIcon('receipt')
                                     ->setOptions([
-                                        'route' => 'edit_stuff',
-                                        'route_param_name' => 'stuffId',
-                                        'route_param_field' => 'stuffId',
+                                        'route' => 'admin_product_catalog',
+                                        'route_param_name' => 'title',
+                                        'route_param_field' => 'title',
                                         // A click on the row will have the same effect as this action
-                                        'clickable_row' => true,
-                                    ])
-                            )
-                            ->add(
-                                (new SubmitRowAction('delete'))
-                                    ->setName('Delete')
-                                    ->setIcon('delete')
-                                    ->setOptions([
-                                        'confirm_message' => 'Delete selected item?',
-                                        'route' => 'delete_stuff',
-                                        'route_param_name' => 'stuffId',
-                                        'route_param_field' => 'stuffId',
+                                        'clickable_row' => false,
+                                        'use_inline_display' => true,
                                     ])
                             )
                     ])
