@@ -32,6 +32,29 @@ class MiraklDatabase
         return $conn;
     }
 
+    public static function getOrderData(mysqli $conn, $date, $billingAddress, $title, $sku, $quantity)
+    {
+        $stmt = $conn->prepare(
+            "SELECT * from Orders o JOIN BillingAddress ON o.billingAddress = BillingAddress.id
+            WHERE o.date = ?
+            AND o.billingAddress = ?
+            AND o.title = ?
+            AND o.sku = ?
+            AND o.quantity = ?;"
+        );
+
+        $stmt->bind_param('sisii',
+            $date, $billingAddress, $title, $sku, $quantity
+        );
+
+        try {
+            return $stmt->execute();
+        } catch (mysqli_sql_exception $e) {
+            echo $e->getMessage() . "\n";
+            return -1;
+        }
+    }
+
     /**
      * @param mysqli $conn database connection
      * @param array $order prepared order array from GridPrepare::extractInvoiceFields()

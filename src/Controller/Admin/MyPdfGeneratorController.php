@@ -1,31 +1,53 @@
 <?php
 
-namespace Module\MiraklConnector\Pdf;
+namespace Module\MiraklConnector\Controller\Admin;
 
 
 use Carrier;
 use Context;
 use Module\MiraklConnector\Grid\Filters\ProductFilters;
+use Module\MiraklConnector\Mirakl\MiraklDatabase;
 use PDFGenerator;
 use Order;
+use Symfony\Component\HttpFoundation\Request;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
+use function GuzzleHttp\Promise\queue;
 
 
-class MyPdfGenerator
+class MyPdfGeneratorController extends FrameworkBundleAdminController
 {
     private Context $context;
 
-    private static string $PDF_BASE_PATH = '/../../../..';
+    private static string $PDF_BASE_PATH = '/../../../../..';
 
     public function __construct()
     {
         $this->context = Context::getContext();
     }
 
-    public function generatePDF(array $params): void
+
+    /**
+     * generate pdf
+     */
+    public function indexAction(Request $request)
+    {
+        $date = $request->query->get('0');
+        $billingAddress = $request->query->get('1');
+        $title = $request->query->get('2');
+        $sku = $request->query->get('3');
+        $quantity = $request->query->get('4');
+
+        $mysqli = MiraklDatabase::getConnection();
+        $res = MiraklDatabase::getOrderData($mysqli, $date,$billingAddress,$title,$sku,$quantity);
+        var_dump($res);
+
+        return $this->redirectToRoute('ps_controller_mirakl_sell_manual_tab_index', []);
+    }
+
+    public function generatePDF(array $params): string
     {
         $myOrderObject = new Order((int)$params['id_order']);
 
@@ -39,7 +61,7 @@ class MyPdfGenerator
         $pdfGen->createFooter($this->getFooter($myCustomInvoiceVarsForPdfFooter));
         $pdfGen->createContent($this->getPdfContent($myCustomInvoiceVarsForPdfContent));
         $pdfGen->writePage();
-        $pdfGen->render('my_custom_pdf.pdf', 'D');
+        return $pdfGen->render('my_custom_pdf.pdf', 'D');
     }
 
     /**
@@ -52,19 +74,19 @@ class MyPdfGenerator
         $this->context->smarty->assign($myCustomInvoiceVarsForPdfContent);
 
         $tpls = array(
-            'addresses_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.addresses-tab.tpl'),
-            'note_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.note-tab.tpl'),
-            'payment_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.payment-tab.tpl'),
-            'product_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.product-tab.tpl'),
-            'shipping_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.shipping-tab.tpl'),
-            'style_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.style-tab.tpl'),
-            'summary_tab' => $this->context->smarty->fetch(__DIR__  . '/pdf/invoice.summary-tab.tpl'),
-            'tax_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.tax-tab.tpl'),
-            'total_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.total-tab.tpl'),
+            'addresses_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.addresses-tab.tpl'),
+            'note_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.note-tab.tpl'),
+            'payment_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.payment-tab.tpl'),
+            'product_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.product-tab.tpl'),
+            'shipping_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.shipping-tab.tpl'),
+            'style_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.style-tab.tpl'),
+            'summary_tab' => $this->context->smarty->fetch(__DIR__ . '/pdf/invoice.summary-tab.tpl'),
+            'tax_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.tax-tab.tpl'),
+            'total_tab' => $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.total-tab.tpl'),
         );
         $this->context->smarty->assign($tpls);
 
-        return $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH . '/pdf/invoice.tpl');
+        return $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/invoice.tpl');
     }
 
     /**
@@ -75,7 +97,7 @@ class MyPdfGenerator
     public function getFooter(array $myCustomInvoiceVarsForPdfFooter): string
     {
         $this->context->smarty->assign($myCustomInvoiceVarsForPdfFooter);
-        return $this->context->smarty->fetch(__DIR__ . MyPdfGenerator::$PDF_BASE_PATH .'/pdf/footer.tpl');
+        return $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH .'/pdf/footer.tpl');
     }
 
     /**
@@ -86,7 +108,7 @@ class MyPdfGenerator
     public function getHeader(array $myCustomInvoiceVarsForPdfHeader): string
     {
         $this->context->smarty->assign($myCustomInvoiceVarsForPdfHeader);
-        return $this->context->smarty->fetch(__DIR__ .MyPdfGenerator::$PDF_BASE_PATH . '/pdf/header.tpl');
+        return $this->context->smarty->fetch(__DIR__ .MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/header.tpl');
     }
 
 

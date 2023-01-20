@@ -46,3 +46,9 @@ services:
       - '@mirakl_connector.grid.data_provider.products'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+  my_pdf_generator_controller:
+    class: Module\MiraklConnector\Controller\Admin\MyPdfGeneratorController
+    tags:
+      - { name: controller.service_arguments }
+

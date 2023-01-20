@@ -26,6 +26,7 @@
     }
   ],
   "require": {
-    "mirakl/sdk-php-shop": "*"
+    "mirakl/sdk-php-shop": "*",
+    "ext-mysqli": "*"
   }
 }

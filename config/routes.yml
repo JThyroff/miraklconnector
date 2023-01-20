@@ -15,3 +15,11 @@ ps_controller_mirakl_sell_manual_tab_search:
         _controller: 'Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController::searchAction'
         _legacy_controller: 'AdminMiraklSellManualTab'
         _legacy_link: 'AdminMiraklSellManualTab:search'
+
+ps_controller_my_pdf_generator_index:
+    path: /my_pdf_generator
+    methods: [GET]
+    defaults:
+        _controller: 'Module\MiraklConnector\Controller\Admin\MyPdfGeneratorController::indexAction'
+        _legacy_controller: 'AdminMyPdfGeneratorController'
+        _legacy_link: 'AdminMyPdfGeneratorController'

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Module\MiraklConnector\Grid\Definition\Factory;
 
-use Module\MiraklConnector\Pdf\MyPdfGenerator;
+use Module\MiraklConnector\Controller\Admin\MyPdfGeneratorController;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -80,7 +80,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        $myPdfController = new MyPdfGenerator();
+        $myPdfController = new MyPdfGeneratorController();
 
         return (new ColumnCollection())
             ->add(
@@ -135,13 +135,13 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setName('Invoice')
                                     ->setIcon('receipt')
                                     ->setOptions([
-                                        'route' => 'ps_controller_mirakl_sell_manual_tab_index',
-                                        'route_param_name' => 'title',
-                                        'route_param_field' => 'title',
+                                        'route' => 'ps_controller_my_pdf_generator_index',
+                                        'route_param_name' => 'params',
+                                        'route_param_field' => 'sku',
+                                        'extra_route_params' => ['date','billingAddress','title','sku','quantity'],
                                         // A click on the row will have the same effect as this action
                                         'clickable_row' => false,
                                         'use_inline_display' => true,
-                                        'onclick' => $myPdfController->generatePDF(['id_order' => 2, 'logo_path' => '/']),
                                     ])
                             )
                     ])
