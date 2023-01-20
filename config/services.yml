@@ -18,8 +18,6 @@ services:
       - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
 
-
-
   doctrine.dbal.custom_connection:
     class: Doctrine\DBAL\Connection
     public: true
@@ -31,7 +29,6 @@ services:
         password: 'mycustompassword'
         host: '172.18.0.2'
         driver: 'pdo_mysql'
-
 
   mirakl_connector.grid.data_provider.products:
     class: 'Module\MiraklConnector\Grid\Data\Factory\ProductGridDataFactory'
