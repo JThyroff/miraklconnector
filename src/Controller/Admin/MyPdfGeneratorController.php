@@ -6,10 +6,12 @@ namespace Module\MiraklConnector\Controller\Admin;
 use Carrier;
 use Context;
 use http\Params;
+use Module\MiraklConnector\Controller\Admin\pdf\PdfGeneratorHelper;
 use Module\MiraklConnector\Grid\Filters\ProductFilters;
 use Module\MiraklConnector\Mirakl\MiraklDatabase;
 use PDFGenerator;
 use Order;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf;
 use Symfony\Component\HttpFoundation\Request;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
@@ -103,7 +105,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         $pdfGen->createFooter($this->getFooter($myCustomInvoiceVarsForPdfFooter));
         $pdfGen->createContent($this->getPdfContent($myCustomInvoiceVarsForPdfContent));
         $pdfGen->writePage();
-        return $pdfGen->render('my_custom_pdf.pdf', 'D');
+        return $pdfGen->render('Invoice_'.PdfGeneratorHelper::invoiceNumberGenerator($params).'.pdf', 'D');
     }
 
     /**
@@ -168,7 +170,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'image_tag' => 'image_tag',
             'product_name' => $params['title'],
             'order_detail_tax_label' => 'order_detail_tax_label',
-            'unit_price_tax_excl_before_specific_price' => 40,
+            'unit_price_tax_excl_before_specific_price' => $params['basePricePerUnit'],
             'unit_price_tax_excl_including_ecotax' => 30,
             'total_price_tax_excl_including_ecotax' => 25,
             'ecotax_tax_excl' => 0.1,
@@ -213,10 +215,13 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
 
         $orderInvoice = new OrderInvoice();
         $carrier = new Carrier('carrier name');
+        $order = new Order();
+        $order->invoice_date = date('d/m/Y', time());
+        $order->date_add = $params['date'];
 
         return [
             'delivery_address' => 'delivery_address',
-            'invoice_address' => $this->invoiceAddressStringBuilder($params),
+            'invoice_address' => PdfGeneratorHelper::invoiceAddressStringBuilder($params),
             'addresses' => [
                 'invoice' => [
                     'vat_number' => '123456789',
@@ -225,10 +230,12 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
                     'postcode' => $params['zip_code'],
                     'city' => $params['city'],
                     'country' => $params['country'],
-                    'invoice_date' => $params['date'],
+                    'invoice_date' => date('d/m/Y', time()),
                 ],
             ],
-            'order' => new Order(),
+            'invoiceNumber' => PdfGeneratorHelper::invoiceNumberGenerator($params),
+            'orderID' => PdfGeneratorHelper::orderIDBuilder($params),
+            'order' => $order,
             'invoice' => [],
             'order_invoice' => $orderInvoice,
             'layout' => $layout,
@@ -239,7 +246,6 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'isTaxEnabled' => false,
             'footer' => $footer,
             'legal_free_text' => 'legal_free_text',
-            #'addresses'                 => ['invoice' => ['vat_number' => 2]],
         ];
     }
 
@@ -267,27 +273,9 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'logo_path' => 'logo.png',
             'width_logo' => 50,
             'height_logo' => 50,
-            'date' => $params['date'],
-            'title' => 'Invoice',
+            'date' => date('d M. Y', time()),
+            'title' => PdfGeneratorHelper::invoiceNumberGenerator($params),
             'available_in_your_account' => 'available_in_your_account',
         ];
-    }
-
-    public function invoiceAddressStringBuilder($params){
-            /*"city" => $res[14],
-            "civility" => $res[15],
-            "country" => $res[16],
-            "firstname" => $res[17],
-            "lastname" => $res[18],
-            "phone" => $res[19],
-            "state" => $res[20],
-            "street" => $res[21],
-            "zip_code" => $res[22],*/
-
-        return $params['firstname']." ".$params['lastname']."<br>"
-            .$params['street']."<br>"
-            .$params['city'].", ".$params['civility']." ".$params['zip_code']."<br>"
-            .$params['country']."<br>"
-            .$params['phone'];
     }
 }

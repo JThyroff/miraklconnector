@@ -33,9 +33,9 @@
 		{/if}
 	</tr>
 	<tr>
-		<td class="center small white">{$title|escape:'html':'UTF-8'}</td>
+		<td class="center small white">{$invoiceNumber|escape:'html':'UTF-8'}</td>
 		<td class="center small white">{dateFormat date=$order->invoice_date full=0}</td>
-		<td class="center small white">{$order->getUniqReference()}</td>
+		<td class="center small white">{$orderID}</td>
 		<td class="center small white">{dateFormat date=$order->date_add full=0}</td>
 		{if $addresses['invoice']['vat_number']}
 			<td class="center small white">
