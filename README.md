@@ -6,7 +6,7 @@ Repository:
 <https://github.com/JThyroff/miraklconnector/>
 
 Prestashop module documentation:
-<https://devdocs.prestashop-project.org/1.7/modules/>
+<https://devdocs.prestashop-project.org/8/>
 
 Prestashop module programming:
 <https://github.com/JThyroff/PrestashopDocs>
