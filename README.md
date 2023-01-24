@@ -15,9 +15,9 @@ Prestashop module programming:
 
 1. Install Mirakl sdk as described in Mirakl Faq and adjust the path to autoload.php.
 
-2. Generate the Mirakl Api Credentials. Copy template.apikey.json, rename it to apikey.json and add your credentials.
+2. Generate the Mirakl Api Credentials. Copy [template.apikey.json](template.apikey.json), rename it to apikey.json and add your credentials.
 
-3. Copy template.invoicefooter.json, rename it to invoicefooter.json and fill in your shop address. 
+3. Copy [template.invoicefooter.json](template.invoicefooter.json), rename it to invoicefooter.json and fill in your shop address. 
 
 4. Run Composer install to resolve dependencies. 
 
