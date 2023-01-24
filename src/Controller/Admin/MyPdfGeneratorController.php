@@ -170,10 +170,10 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'image_tag' => 'image_tag',
             'product_name' => $params['title'],
             'order_detail_tax_label' => 'order_detail_tax_label',
-            'unit_price_tax_excl_before_specific_price' => $params['basePricePerUnit'],
-            'unit_price_tax_excl_including_ecotax' => 30,
-            'total_price_tax_excl_including_ecotax' => 25,
-            'ecotax_tax_excl' => 0.1,
+            'unit_price_tax_excl_before_specific_price' => $params['totalBasePrice'],
+            'unit_price_tax_excl_including_ecotax' => $params['basePricePerUnit'],
+            'total_price_tax_excl_including_ecotax' => $params['totalBasePrice'],
+            'ecotax_tax_excl' => 0.0,
             'product_quantity' => $params['quantity'],
             'customizedDatas' => [],
         ];
@@ -190,7 +190,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'reference' => [
                 'width' => 10,
             ],
-            'before_discount' => true,
+            'before_discount' => false,
             'unit_price_tax_excl' => [
                 'width' => 10,
             ],
@@ -204,13 +204,13 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         ];
 
         $footer = [
-            'products_before_discounts_tax_excl' => 0.01,
-            'product_discounts_tax_excl' => 0.01,
-            'shipping_tax_excl' => 0.01,
-            'wrapping_tax_excl' => 0.01,
-            'total_paid_tax_excl' => 0.01,
-            'total_taxes' => 0.01,
-            'total_paid_tax_incl' => 0.01,
+            'products_before_discounts_tax_excl' => $params['totalBasePrice'],
+            'product_discounts_tax_excl' => 0.00,
+            'shipping_tax_excl' => $params['shippingPrice'],
+            'wrapping_tax_excl' => $params['taxes'],
+            'total_paid_tax_excl' => $params['totalPrice'],
+            'total_taxes' => $params['taxes'],
+            'total_paid_tax_incl' => $params['totalPrice'],
         ];
 
         $orderInvoice = new OrderInvoice();
@@ -245,7 +245,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
             'carrier' => $carrier,
             'isTaxEnabled' => false,
             'footer' => $footer,
-            'legal_free_text' => 'legal_free_text',
+            'legal_free_text' => 'Please note that this invoice has been generated automatically by our software, which is currently in the alpha testing phase. If you notice any errors or discrepancies, we kindly request that you initiate contact with our customer support team to resolve the issue. We apologize for any inconvenience this may cause and appreciate your understanding and cooperation.',
         ];
     }
 
