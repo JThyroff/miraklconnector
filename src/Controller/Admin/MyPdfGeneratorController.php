@@ -5,6 +5,7 @@ namespace Module\MiraklConnector\Controller\Admin;
 
 use Carrier;
 use Context;
+use http\Params;
 use Module\MiraklConnector\Grid\Filters\ProductFilters;
 use Module\MiraklConnector\Mirakl\MiraklDatabase;
 use PDFGenerator;
@@ -15,6 +16,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
 use function GuzzleHttp\Promise\queue;
+use function Sodium\add;
 
 
 class MyPdfGeneratorController extends FrameworkBundleAdminController
@@ -22,10 +24,18 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
     private Context $context;
 
     private static string $PDF_BASE_PATH = '/../../../../..';
+    private string $shop_address;
 
     public function __construct()
     {
         $this->context = Context::getContext();
+
+        #region read shop address
+        $json = file_get_contents(dirname(__DIR__, 3) . '/invoicefooter.json');
+        $json_data = json_decode($json, true);
+
+        $this->shop_address = $json_data["shop_address"];
+        #endregion
     }
 
 
@@ -41,19 +51,51 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         $quantity = $request->query->get('4');
 
         $mysqli = MiraklDatabase::getConnection();
-        $res = MiraklDatabase::getOrderData($mysqli, $date,$billingAddress,$title,$sku,$quantity);
-        var_dump($res);
+        $res = MiraklDatabase::getOrderData($mysqli, $date, $billingAddress, $title, $sku, $quantity);
+
+        $params = array(
+
+            //Order
+
+            "date" => $date,
+            "billingAddress" => $billingAddress,
+            "title" => $title,
+            "sku" => $sku,
+            "quantity" => $quantity,
+            "basePricePerUnit" => $res[5],
+            "basePrice" => $res[6],
+            "totalBasePrice" => $res[7],
+            "taxes" =>$res[8],
+            "commissionTaxRate" => $res[9],
+            "shippingPrice" =>$res[10],
+            "shippingTaxes" => $res[11],
+            "totalPrice" =>$res[12],
+
+            // JOIN ON "id" => $res[13]
+
+            //Address
+
+            "city" => $res[14],
+            "civility" => $res[15],
+            "country" => $res[16],
+            "firstname" => $res[17],
+            "lastname" => $res[18],
+            "phone" => $res[19],
+            "state" => $res[20],
+            "street" => $res[21],
+            "zip_code" => $res[22],
+        );
+
+        $this->generatePDF($params);
 
         return $this->redirectToRoute('ps_controller_mirakl_sell_manual_tab_index', []);
     }
 
     public function generatePDF(array $params): string
     {
-        $myOrderObject = new Order((int)$params['id_order']);
-
-        $myCustomInvoiceVarsForPdfContent = $this->myContentDatasPresenter($myOrderObject);
-        $myCustomInvoiceVarsForPdfFooter = $this->myFooterDatasPresenter($myOrderObject);
-        $myCustomInvoiceVarsForPdfHeader = $this->myHeaderDatasPresenter($myOrderObject);
+        $myCustomInvoiceVarsForPdfContent = $this->myContentDatasPresenter($params);
+        $myCustomInvoiceVarsForPdfFooter = $this->myFooterDatasPresenter($params);
+        $myCustomInvoiceVarsForPdfHeader = $this->myHeaderDatasPresenter($params);
         $pdfGen = new PDFGenerator(false, 'P');
         $pdfGen->setFontForLang(Context::getContext()->language->iso_code);
         $pdfGen->startPageGroup();
@@ -97,7 +139,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
     public function getFooter(array $myCustomInvoiceVarsForPdfFooter): string
     {
         $this->context->smarty->assign($myCustomInvoiceVarsForPdfFooter);
-        return $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH .'/pdf/footer.tpl');
+        return $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/footer.tpl');
     }
 
     /**
@@ -108,7 +150,7 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
     public function getHeader(array $myCustomInvoiceVarsForPdfHeader): string
     {
         $this->context->smarty->assign($myCustomInvoiceVarsForPdfHeader);
-        return $this->context->smarty->fetch(__DIR__ .MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/header.tpl');
+        return $this->context->smarty->fetch(__DIR__ . MyPdfGeneratorController::$PDF_BASE_PATH . '/pdf/header.tpl');
     }
 
 
@@ -117,20 +159,20 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function myContentDatasPresenter(Order $myOrderObject): array
+    public function myContentDatasPresenter(array $params): array
     {
         // TODO : implement it
         $example_order_detail = [
-            'product_reference' => 'product_reference',
+            'product_reference' => $params['sku'],
             'image' => 'image',
             'image_tag' => 'image_tag',
-            'product_name' => 'product_name',
+            'product_name' => $params['title'],
             'order_detail_tax_label' => 'order_detail_tax_label',
             'unit_price_tax_excl_before_specific_price' => 40,
             'unit_price_tax_excl_including_ecotax' => 30,
             'total_price_tax_excl_including_ecotax' => 25,
             'ecotax_tax_excl' => 0.1,
-            'product_quantity' => 2,
+            'product_quantity' => $params['quantity'],
             'customizedDatas' => [],
         ];
         $order_details = [
@@ -138,24 +180,24 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         ];
         $layout = [
             'product' => [
-                'width' => 50,
+                'width' => 40,
             ],
             'tax_code' => [
-                'width' => 50,
+                'width' => 10,
             ],
             'reference' => [
-                'width' => 50,
+                'width' => 10,
             ],
             'before_discount' => true,
             'unit_price_tax_excl' => [
-                'width' => 50,
+                'width' => 10,
             ],
             'quantity' => [
-                'width' => 50,
+                'width' => 10,
             ],
-            '_colCount' => 10,
+            '_colCount' => 6,
             'total_tax_excl' => [
-                'width' => 50,
+                'width' => 10,
             ],
         ];
 
@@ -170,22 +212,23 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         ];
 
         $orderInvoice = new OrderInvoice();
-        $carrier = new Carrier('carrie name');
+        $carrier = new Carrier('carrier name');
 
         return [
             'delivery_address' => 'delivery_address',
-            'invoice_address' => 'invoice_address',
+            'invoice_address' => $this->invoiceAddressStringBuilder($params),
             'addresses' => [
                 'invoice' => [
                     'vat_number' => '123456789',
                     'address_1' => 'address 1',
                     'address_2' => 'address 2',
-                    'postcode' => 'postcode',
-                    'city' => 'city',
-                    'country' => 'country',
+                    'postcode' => $params['zip_code'],
+                    'city' => $params['city'],
+                    'country' => $params['country'],
+                    'invoice_date' => $params['date'],
                 ],
             ],
-            'order' => $myOrderObject,
+            'order' => new Order(),
             'invoice' => [],
             'order_invoice' => $orderInvoice,
             'layout' => $layout,
@@ -205,11 +248,10 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function myFooterDatasPresenter(Order $myOrderObject): array
+    public function myFooterDatasPresenter(array $params): array
     {
-        // TODO : implement it
         return [
-            'shop_address' => 'shop_address',
+            'shop_address' => $this->shop_address,
         ];
     }
 
@@ -218,16 +260,34 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    public function myHeaderDatasPresenter(Order $myOrderObject): array
+    public function myHeaderDatasPresenter(array $params): array
     {
         // TODO : implement it
         return [
             'logo_path' => 'logo.png',
             'width_logo' => 50,
             'height_logo' => 50,
-            'date' => '18.01.2000',
+            'date' => $params['date'],
             'title' => 'Invoice',
             'available_in_your_account' => 'available_in_your_account',
         ];
+    }
+
+    public function invoiceAddressStringBuilder($params){
+            /*"city" => $res[14],
+            "civility" => $res[15],
+            "country" => $res[16],
+            "firstname" => $res[17],
+            "lastname" => $res[18],
+            "phone" => $res[19],
+            "state" => $res[20],
+            "street" => $res[21],
+            "zip_code" => $res[22],*/
+
+        return $params['firstname']." ".$params['lastname']."<br>"
+            .$params['street']."<br>"
+            .$params['city'].", ".$params['civility']." ".$params['zip_code']."<br>"
+            .$params['country']."<br>"
+            .$params['phone'];
     }
 }

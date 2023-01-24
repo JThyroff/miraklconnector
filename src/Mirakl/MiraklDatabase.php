@@ -22,18 +22,18 @@ class MiraklDatabase
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $conn = new mysqli($serverName, $userName, $password, $dbName);
 
-        echo("Connecting to " . $dbName . " on " . $serverName . " ...\n");
+        //echo("Connecting to " . $dbName . " on " . $serverName . " ...\n");
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        echo("Connected successfully\n");
         return $conn;
     }
 
     public static function getOrderData(mysqli $conn, $date, $billingAddress, $title, $sku, $quantity)
     {
+        /*
         $stmt = $conn->prepare(
             "SELECT * from Orders o JOIN BillingAddress ON o.billingAddress = BillingAddress.id
             WHERE o.date = ?
@@ -45,10 +45,18 @@ class MiraklDatabase
 
         $stmt->bind_param('sisii',
             $date, $billingAddress, $title, $sku, $quantity
-        );
+        );*/
+
+        $sql = "SELECT * from Orders o JOIN BillingAddress ON o.billingAddress = BillingAddress.id
+            WHERE o.date LIKE '".$date."'
+            AND o.billingAddress = ".$billingAddress."
+            AND o.title LIKE '".$title."'
+            AND o.sku = ".$sku."
+            AND o.quantity = ".$quantity.";"
+        ;
 
         try {
-            return $stmt->execute();
+            return $conn->query($sql)->fetch_row();
         } catch (mysqli_sql_exception $e) {
             echo $e->getMessage() . "\n";
             return -1;
@@ -202,14 +210,16 @@ class MiraklDatabase
     }
 }
 
-$mysqli = MiraklDatabase::getConnection();
-MiraklDatabase::createTables($mysqli);
+if (false) {
+    $mysqli = MiraklDatabase::getConnection();
+    MiraklDatabase::createTables($mysqli);
 
-list($client, $request) = FetchOrders::getOrdersRequest();
-$response = $client->getOrders($request);
-var_dump($response[0]);
-$invoiceFields = GridPrepare::extractInvoiceFields(...$response);
-foreach ($invoiceFields as $order) {
-    var_dump(MiraklDatabase::insertOrder($mysqli, $order));
+    list($client, $request) = FetchOrders::getOrdersRequest();
+    $response = $client->getOrders($request);
+    var_dump($response[0]);
+    $invoiceFields = GridPrepare::extractInvoiceFields(...$response);
+    foreach ($invoiceFields as $order) {
+        var_dump(MiraklDatabase::insertOrder($mysqli, $order));
+    }
 }
 
