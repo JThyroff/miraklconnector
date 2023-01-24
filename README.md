@@ -17,6 +17,8 @@ Prestashop module programming:
 
 2. Generate the Mirakl Api Credentials. Copy template.apikey.json, rename it to apikey.json and add your credentials.
 
-3. Run Composer install to resolve dependencies. 
+3. Copy template.invoicefooter.json, rename it to invoicefooter.json and fill in your shop address. 
 
-4. Install module in Prestashop Back Office.  
+4. Run Composer install to resolve dependencies. 
+
+5. Install module in Prestashop Back Office.  
