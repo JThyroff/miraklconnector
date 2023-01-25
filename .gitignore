@@ -2,6 +2,8 @@
 # The following files contain your database credentials and other personal data.
 
 apikey.json
+invoicefooter.json
+
 config/settings.*.php
 vendor
 composer.lock

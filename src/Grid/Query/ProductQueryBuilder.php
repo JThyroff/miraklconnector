@@ -122,7 +122,6 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb->select('COUNT(o.`date`)');
-        #$qb->select('COUNT(p.`id_product`)');
 
         return $qb;
     }
@@ -146,18 +145,6 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'o.billingAddress = ba.ID'
             )
         ;
-
-        /*
-        $sqlFilters = new SqlFilters();
-        $sqlFilters
-            ->addFilter(
-                'base_price',
-                'o.`basePrice`',
-                SqlFilters::WHERE_LIKE
-            )
-        ;
-
-        $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);*/
 
         $qb->setParameter('id_shop', $this->contextShopId);
         $qb->setParameter('id_lang', $this->contextLanguageId);

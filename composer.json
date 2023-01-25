@@ -1,5 +1,5 @@
 {
-  "name": "prestashop/miraklconnector",
+  "name": "vendor/miraklconnector",
   "license": "AFL-3.0",
   "authors": [
     {
@@ -26,6 +26,7 @@
     }
   ],
   "require": {
-    "mirakl/sdk-php-shop": "*"
+    "mirakl/sdk-php-shop": "*",
+    "ext-mysqli": "*"
   }
 }
