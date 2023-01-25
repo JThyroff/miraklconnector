@@ -13,12 +13,14 @@ Prestashop module programming:
 
 ## Getting started
 
-1. Install Mirakl sdk as described in Mirakl Faq and adjust the path to autoload.php.
+1. Install Mirakl sdk as described in Mirakl Faq. (Copy the sdk zip archive to "/miraklconnector/var/zip/".)
 
 2. Generate the Mirakl Api Credentials. Copy [template.apikey.json](template.apikey.json), rename it to apikey.json and add your credentials.
 
 3. Copy [template.invoicefooter.json](template.invoicefooter.json), rename it to invoicefooter.json and fill in your shop address. 
 
-4. Run Composer install to resolve dependencies. 
+4. Adjust database credentials in [service.yml](config/services.yml) and in [MiraklDatabase.php](src/Mirakl/MiraklDatabase.php).
 
-5. Install module in Prestashop Back Office.  
+5. Run Composer install to resolve dependencies. 
+
+6. Install module in Prestashop Back Office.  
