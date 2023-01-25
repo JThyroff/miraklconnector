@@ -35,7 +35,7 @@ use Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
 class miraklconnector extends Module{
     public function __construct($name = null, Context $context = null)
     {
-        $this->name = "Mirakl Connector";
+        $this->name = "miraklconnector";
         $this->tab = "administration";
 
         $this->version = "0.1.0";
