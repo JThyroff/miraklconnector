@@ -12,10 +12,16 @@ use Mirakl\MMP\Shop\Domain\Collection\Order\ShopOrderCollection;
 use Mirakl\MMP\Shop\Request\Order\Get\GetOrdersRequest;
 use Mirakl\MMP\Shop\Domain\Order\ShopOrder;
 
+/**
+ * Connection handling for mirakl sdk.
+ */
 class FetchOrders
 {
     /**
-     * @return array
+     * Returns a tuple of a client and an ordersRequest using the credentials specified in apikey.json.
+     * To execute the request on the client run: $response = $client->getOrders($request);
+     *
+     * @return array array($client, $request)
      */
     public static function getOrdersRequest(): array
     {
@@ -32,7 +38,14 @@ class FetchOrders
         return array($client, $request);
     }
 
-    public static function fetchOrders()
+    /**
+     * Unused.
+     *
+     * Fetch orders from mirakl and return them in a formatted array.
+     *
+     * @return array
+     */
+    public static function fetchOrders(): array
     {
         list($client, $request) = self::getOrdersRequest();
 
@@ -41,6 +54,14 @@ class FetchOrders
         return $processJSON;
     }
 
+    /**
+     * Unused.
+     *
+     * Print shopOrder to console.
+     *
+     * @param ShopOrder $shopOrder
+     * @return void
+     */
     public static function printToConsole(ShopOrder $shopOrder)
     {
         $shopOrderLine = $shopOrder->getOrderLines()->first();
@@ -57,7 +78,6 @@ class FetchOrders
 
 #region debug script code
 if (false){
-    FetchOrders::fetchOrders();
     list($client, $request) = FetchOrders::getOrdersRequest();
     $response = $client->getOrders($request);
     //var_dump($response[0]);

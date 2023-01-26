@@ -37,6 +37,9 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * https://devdocs.prestashop-project.org/8/development/components/grid/
+ */
 class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     const GRID_ID = 'product';

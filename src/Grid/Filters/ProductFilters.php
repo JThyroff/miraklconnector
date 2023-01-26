@@ -25,6 +25,9 @@ namespace Module\MiraklConnector\Grid\Filters;
 use Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
+/**
+ * https://devdocs.prestashop-project.org/8/development/components/grid/
+ */
 class ProductFilters extends Filters
 {
     protected $filterId = ProductGridDefinitionFactory::GRID_ID;

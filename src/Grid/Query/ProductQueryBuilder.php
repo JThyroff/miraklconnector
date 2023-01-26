@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
  * Defines all required sql statements to render products list.
+ *
+ * https://devdocs.prestashop-project.org/8/development/components/grid/
  */
 class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 {

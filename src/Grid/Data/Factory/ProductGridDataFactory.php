@@ -16,6 +16,13 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
 
+
+/**
+ * Class ProductGridDataFactory is responsible for returning grid data using Doctrine query builders.
+ * @PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory
+ *
+ * https://devdocs.prestashop-project.org/8/development/components/grid/
+ */
 class ProductGridDataFactory implements GridDataFactoryInterface
 {
     /**

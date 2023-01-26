@@ -12,6 +12,7 @@ use Module\MiraklConnector\Mirakl\MiraklDatabase;
 use PDFGenerator;
 use Order;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use Symfony\Component\HttpFoundation\Request;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderInvoice;
@@ -21,6 +22,12 @@ use function GuzzleHttp\Promise\queue;
 use function Sodium\add;
 
 
+/**
+ * Controller to generate a Pdf for an invoice in the table. The order details are passed in the url on button click.
+ * @ProductGridDefinitionFactory->getColumns()-> ... -> add((new LinkRowAction('invoice'))
+ *
+ * https://devdocs.prestashop-project.org/8/modules/concepts/pdf/#customize-the-pdf-files-templates
+ */
 class MyPdfGeneratorController extends FrameworkBundleAdminController
 {
     private Context $context;
@@ -42,7 +49,8 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
 
 
     /**
-     * generate pdf
+     * Index action of the controller. Parameter processing and initiating the pdf generation.
+     * @param Request $request holds order information
      */
     public function indexAction(Request $request)
     {
@@ -93,6 +101,13 @@ class MyPdfGeneratorController extends FrameworkBundleAdminController
         return $this->redirectToRoute('ps_controller_mirakl_sell_manual_tab_index', []);
     }
 
+    /**
+     * Generate the pdf for an order passed in a prepared params array
+     *
+     * @param array $params order params prepared in the indexAction
+     * @return string
+     * @throws \PrestaShopException
+     */
     public function generatePDF(array $params): string
     {
         $myCustomInvoiceVarsForPdfContent = $this->myContentDatasPresenter($params);

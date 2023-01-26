@@ -4,8 +4,13 @@ namespace Module\MiraklConnector\Controller\Admin\pdf;
 
 class PdfGeneratorHelper
 {
-    //$params array(23) from MyPdfGeneratorController with order (index 0 - 13) and address (index 14 - 22) information
-
+    /**
+     * Builds an Address String from the given params array.
+     *
+     * @param $params $params array(23) from MyPdfGeneratorController
+     *                  with order (index 0 - 13) and address (index 14 - 22) information
+     * @return string
+     */
     public static function invoiceAddressStringBuilder($params){
         /*"city" => $res[14],
         "civility" => $res[15],
@@ -24,6 +29,14 @@ class PdfGeneratorHelper
             .$params['phone'];
     }
 
+
+    /**
+     * Generates a unique number string for a given order.
+     *
+     * @param $params $params array(23) from MyPdfGeneratorController
+     *                  with order (index 0 - 13) and address (index 14 - 22) information
+     * @return string
+     */
     public static function invoiceNumberGenerator($params){
 
         $invoice_date = $params['date'];
@@ -32,6 +45,12 @@ class PdfGeneratorHelper
         return 'PC_'.$y.'_'.self::orderIDBuilder($params);
     }
 
+    /**
+     * Generates a unique order id string for a given order.
+     * @param $params $params array(23) from MyPdfGeneratorController
+     *                  with order (index 0 - 13) and address (index 14 - 22) information
+     * @return string
+     */
     public static function orderIDBuilder($params){
         $invoice_date = $params['date'];
         $md = date('md',strtotime($invoice_date));

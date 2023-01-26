@@ -1,3 +1,5 @@
+# Creates an installable zip archive of the module.
+
 MODULE='miraklconnector'
 ARCHIVE=$MODULE'.zip'
 

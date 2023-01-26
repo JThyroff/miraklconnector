@@ -7,9 +7,20 @@ namespace Module\MiraklConnector\Mirakl;
 use Mirakl\MMP\Shop\Domain\Order\ShopOrder;
 use Mirakl\MMP\Shop\Domain\Collection\Order\ShopOrderCollection;
 
+/**
+ * Processes the mirakl sdk shop orders result json, filters necessary fields and converts it to an array.
+ */
 class GridPrepare
 {
-    public static function processJSON(ShopOrder ...$shopOrders)
+    /**
+     * Unused.
+     *
+     * Extract fields from shopOrders.
+     *
+     * @param ShopOrder ...$shopOrders
+     * @return array
+     */
+    public static function processJSON(ShopOrder ...$shopOrders): array
     {
         $array = array();
         foreach ($shopOrders as $order) {
@@ -37,6 +48,13 @@ class GridPrepare
         return $array;
     }
 
+    /**
+     *  Extract fields from shopOrders used for Invoices.
+     *  TODO extract data for billing address.
+     *
+     * @param ShopOrder ...$shopOrders
+     * @return array
+     */
     public static function extractInvoiceFields(ShopOrder ...$shopOrders): array
     {
         $array = array();

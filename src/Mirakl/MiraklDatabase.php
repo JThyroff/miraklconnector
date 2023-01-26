@@ -10,19 +10,27 @@ use Mirakl\MMP\Common\Domain\Order\CustomerBillingAddress;
 
 require_once(dirname(__DIR__, 2) . '/vendor/autoload.php');
 
+/**
+ * In order to make the table in the MiraklTab filterable, the json data responses from mirakl sdk order requests
+ * get converted to a sql database. This class provides functions to connect to the database, create the
+ * necessary tables, insert and query the data from it.
+ */
 class MiraklDatabase
 {
+    /**
+     * Returns a connection to the mirakl-database.
+     * @return mysqli
+     */
     public static function getConnection(): mysqli
     {
-        $serverName = "172.18.0.2";
+        //TODO parameterize and load data from a config file
+        $serverName = "192.168.50.2";
         $userName = "root";
         $password = "mycustompassword";
         $dbName = "PC_CompOrders";
 
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $conn = new mysqli($serverName, $userName, $password, $dbName);
-
-        //echo("Connecting to " . $dbName . " on " . $serverName . " ...\n");
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
@@ -31,8 +39,21 @@ class MiraklDatabase
         return $conn;
     }
 
+    /**
+     * Queries the row with the matching fields. Returns the matching row entry as array.
+     *
+     * @param mysqli $conn
+     * @param $date
+     * @param $billingAddress
+     * @param $title
+     * @param $sku
+     * @param $quantity
+     * @return array|false|int|null
+     */
     public static function getOrderData(mysqli $conn, $date, $billingAddress, $title, $sku, $quantity)
     {
+        //TODO program sql safe with $stmt = $conn->prepare(); and $stmt->bind_param();
+
         /*
         $stmt = $conn->prepare(
             "SELECT * from Orders o JOIN BillingAddress ON o.billingAddress = BillingAddress.id
@@ -64,6 +85,8 @@ class MiraklDatabase
     }
 
     /**
+     * Inserts the billing address of a prepared order array into the database.
+     *
      * @param mysqli $conn database connection
      * @param array $order prepared order array from GridPrepare::extractInvoiceFields()
      * @return int ID of the new entry
@@ -106,6 +129,13 @@ class MiraklDatabase
         return $conn->query($sql)->fetch_row()[0];
     }
 
+    /**
+     * Inserts the order into the database
+     *
+     * @param mysqli $conn
+     * @param array $order
+     * @return int|mixed
+     */
     public static function insertOrder(mysqli $conn, array $order)
     {
         $billingAddress = MiraklDatabase::insertBillingAddress($conn, $order);
@@ -150,6 +180,12 @@ class MiraklDatabase
         return $conn->query($sql)->fetch_row()[0];
     }
 
+    /**
+     * Creates the necessary tables 'Orders' and 'BillingAddress' with primary and foreign keys.
+     * TODO add code for DeliveryAddress
+     * @param mysqli $conn
+     * @return void
+     */
     public static function createTables(mysqli $conn): void
     {
         echo "Creating tables ...\n";
@@ -210,6 +246,8 @@ class MiraklDatabase
     }
 }
 
+//Debug script code to execute code manually
+//TODO integrate to run automatically on tab load
 if (false) {
     $mysqli = MiraklDatabase::getConnection();
     MiraklDatabase::createTables($mysqli);

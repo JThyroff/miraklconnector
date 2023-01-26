@@ -1,4 +1,16 @@
 services:
+  # Database connection
+  doctrine.dbal.custom_connection:
+    class: Doctrine\DBAL\Connection
+    public: true
+    factory: [ 'Doctrine\DBAL\DriverManager', 'getConnection' ]
+    arguments:
+      - dbname: 'PC_CompOrders'
+        user: 'root'
+        password: 'mycustompassword'
+        host: '192.168.50.2'
+        driver: 'pdo_mysql'
+
   # Grid services
   mirakl_connector.grid.definition.factory.products:
     class: 'Module\MiraklConnector\Grid\Definition\Factory\ProductGridDefinitionFactory'
@@ -18,18 +30,6 @@ services:
       - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
 
-  doctrine.dbal.custom_connection:
-    class: Doctrine\DBAL\Connection
-    public: true
-    factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
-    arguments:
-      -
-        dbname: 'PC_CompOrders'
-        user: 'root'
-        password: 'mycustompassword'
-        host: '172.18.0.2'
-        driver: 'pdo_mysql'
-
   mirakl_connector.grid.data_provider.products:
     class: 'Module\MiraklConnector\Grid\Data\Factory\ProductGridDataFactory'
     arguments:
@@ -47,6 +47,7 @@ services:
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
+  # PdfController service stub
   my_pdf_generator_controller:
     class: Module\MiraklConnector\Controller\Admin\MyPdfGeneratorController
     tags:
