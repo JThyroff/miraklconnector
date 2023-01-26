@@ -32,13 +32,16 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Module\MiraklConnector\Controller\Admin\MiraklSellManualTabController;
 
+/**
+ * Main module class. Don't rename it.
+ */
 class miraklconnector extends Module{
     public function __construct($name = null, Context $context = null)
     {
         $this->name = "miraklconnector";
         $this->tab = "administration";
 
-        $this->version = "0.1.0";
+        $this->version = "0.2.0";
         $this->author = "Johannes Thyroff";
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -54,6 +57,11 @@ class miraklconnector extends Module{
         $this->confirmUninstall = $this->l("Are you sure you want to uninstall ".$this->displayName);
     }
 
+    /**
+     * Displays the configuration page
+     *
+     * @return false|string
+     */
     public function getContent(){
         //this is the configuration page
         return $this->display(__FILE__, 'views/templates/admin/configuration.tpl');
@@ -80,6 +88,8 @@ class miraklconnector extends Module{
     }
 
     /**
+     * Install Mirakl Tab
+     *
      * @return bool
      */
     private function manuallyInstallMiraklSellTab(): bool
@@ -108,6 +118,13 @@ class miraklconnector extends Module{
         return (bool) $tab->save();
     }
 
+    /**
+     * Uninstall Mirakl Tab
+     *
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     private function manuallyUnInstallMiraklSellTab(): bool
     {
         $tabId = (int) Tab::getIdFromClassName(MiraklSellManualTabController::TAB_CLASS_NAME);
