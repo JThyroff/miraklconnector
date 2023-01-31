@@ -1,6 +1,6 @@
 # MiraklConnector
 
-Prestashop module to integrate Mirakl orders in Prestashop using the Mirakl sdk.
+Prestashop module to integrate Mirakl orders in Prestashop using the Mirakl sdk. This module adds an extra tab with a table in the backoffice showing mirakl orders. Providing a functionality to generate pdf invoices for each order.
 
 Repository:
 <https://github.com/JThyroff/miraklconnector/>
